@@ -1,0 +1,435 @@
+
+#---List of libraries
+library(tidyverse)
+library(modelr)
+library(gridExtra)
+library(grid)
+library(tidyquant)
+library(timetk)
+library(broom)
+library(shiny)
+library(data.table)
+library(DT)
+#---DATA PREPARATION
+#--- Data Motorcycle Honda  sales 2005-2016
+b_5 <- read.csv("G:/data-motor/th2005.csv")
+c_5 <- b_5[1:12,2:7]
+d_5<-data.frame(
+  year = rep(2005,12),
+  month = 1:12,
+  day = 1
+)
+e_5<- cbind(c_5,d_5)
+s1 <- sum(b_5$Honda)
+#s1
+#[1] 5296380
+
+#---th 2006
+b_6 <- read.csv("G:/data-motor/th2006.csv")
+c_6 <- b_6[1:12,2:7]
+d_6<-data.frame(
+  year = rep(2006,12),
+  month = 1:12,
+  day = 1
+)
+e_6<- cbind(c_6,d_6)
+s2 <- sum(b_6$Honda)
+#s2
+#[1] 4678336
+
+
+#---th 2007
+b_7 <- read.csv("G:/data-motor/th2007.csv")
+c_7 <- b_7[1:12,2:7]
+d_7<-data.frame(
+  year = rep(2007,12),
+  month = 1:12,
+  day = 1
+)
+e_7<- cbind(c_7,d_7)
+s3 <- sum(b_7$Honda)
+#s3
+#[1] 4282050
+
+#---th 2008
+
+b_8 <- read.csv("G:/data-motor/th2008.csv")
+c_8 <- b_8[1:12,2:7]
+d_8<-data.frame(
+  year = rep(2008,12),
+  month = 1:12,
+  day = 1
+)
+e_8 <- cbind(c_8,d_8)
+s4 <- sum(b_8$Honda)
+#s4
+#[1] 5749152
+
+#---th 2009
+b_9 <- read.csv("G:/data-motor/th2009.csv")
+c_9 <- b_9[1:12,2:7]
+d_9<-data.frame(
+  year = rep(2009,12),
+  month = 1:12,
+  day = 1
+)
+e_9 <- cbind(c_9,d_9)
+s5 <- sum(b_9$Honda)
+#s5
+#[1] 5402558
+
+#---th 2010
+b_10 <- read.csv("G:/data-motor/th2010.csv")
+c_10 <- b_10[1:12,2:7]
+d_10 <- data.frame(
+  year = rep(2010,12),
+  month = 1:12,
+  day = 1
+)
+e_10 <- cbind(c_10,d_10)
+s6 <- sum(b_10$Honda)
+#s6
+#[1] 6832094
+
+#---th 2011
+b_11 <- read.csv("G:/data-motor/th2011.csv")
+c_11 <- b_11[1:12,2:7]
+d_11 <- data.frame(
+  year = rep(2011,12),
+  month = 1:12,
+  day = 1
+)
+e_11 <- cbind(c_11,d_11)
+s7 <- sum(b_11$Honda)
+#s7
+#[1] 8550424
+
+#---th 2012
+b_12 <- read.csv("G:/data-motor/th2012.csv")
+c_12 <- b_12[1:12,2:7]
+d_12 <- data.frame(
+  year = rep(2012,12),
+  month = 1:12,
+  day = 1
+)
+e_12 <- cbind(c_12,d_12)
+s8 <- sum(b_12$Honda)
+#s8
+#[1] 8185386
+
+#---th 2013
+b_13 <- read.csv("G:/data-motor/th2013.csv")
+c_13 <- b_13[1:12,2:7]
+d_13 <- data.frame(
+  year = rep(2013,12),
+  month = 1:12,
+  day = 1
+)
+e_13 <- cbind(c_13,d_13)
+s9 <- sum(b_13$Honda)
+#s9
+#[1] 9395452
+
+#---th 2014
+b_14 <- read.csv("G:/data-motor/th2014.csv")
+c_14 <- b_14[1:12,2:7]
+d_14 <- data.frame(
+  year = rep(2014,12),
+  month = 1:12,
+  day = 1
+)
+e_14 <- cbind(c_14,d_14)
+s10 <- sum(b_14$Honda)
+#s10
+#[1] 10102752
+
+#---th 2015
+b_15 <- read.csv("G:/data-motor/th2015.csv")
+c_15 <- b_15[1:12,2:7]
+d_15 <- data.frame(
+  year = rep(2015,12),
+  month = 1:12,
+  day = 1
+)
+e_15 <- cbind(c_15,d_15)
+s11 <- sum(b_15$Honda)
+#[1] 8907776
+#---th 2016
+b_16 <- read.csv("G:/data-motor/th2016.csv")
+c_16 <- b_16[1:12,2:7]
+d_16 <- data.frame(
+  year = rep(2016,12),
+  month = 1:12,
+  day = 1
+)
+e_16 <- cbind(c_16,d_16)
+s12 <- sum(b_16$Honda)
+#[1] 8761776
+stot <- s1+s2+s3+s4+s5+s6+s7+s8+s9+s10+s11+s12
+#stot
+#[1]86144136
+#---binding all data
+tot1 <- rbind(e_5,e_6,e_7,e_8,e_9,e_10,e_11,e_12,e_13,e_14,e_15,e_16)#---table 1
+tot1
+#---Proses
+mtot1 <- tot1 %>%
+  mutate(ndate = ymd(paste(tot1$year, tot1$month, tot1$day)))
+#---use Honda only
+dmtot1 <- mtot1 %>%
+  select(Honda,ndate) #-----table 2 Honda sales
+dmtot1
+
+P1 <- dmtot1 %>%
+  ggplot(aes(x = ndate, y = Honda)) +
+  geom_rect(xmin = as.numeric(ymd("2012-01-01")),
+            xmax = as.numeric(ymd("2017-01-01")),
+            ymin = 0, ymax = 1000,
+            fill = palette_light()[[4]], alpha = 0.01) +
+  annotate("text", x = ymd("2005-01-01"), y = 339,
+           color = palette_light()[[1]], label = "Train Region") +
+  annotate("text", x = ymd("2012-01-01"), y = 287,
+           color = palette_light()[[1]], label = "Test Region") +
+  geom_point(alpha = 0.5, color = palette_light()[[1]]) + #-----grafik 1 g_traintest
+  labs(title = "Motorcycle sales", x = "") +
+  theme_tq()
+
+
+#--Split the data into train and test sets at ?2012-07-01?.
+# Split into training and test sets
+
+train <- dmtot1 %>%
+  filter(ndate < ymd("2012-01-01"))
+
+test <- dmtot1 %>%
+  filter(ndate >= ymd("2012-01-01"))#------ok
+
+
+#---Modeling
+#----Start with the training set, which has the ?date? and ?cnt? columns.
+# Add time series signature
+# Add time series signature
+train_augmented <- train %>%
+  tk_augment_timeseries_signature() #---table 3 train_augmented
+train_augmented
+
+#--- Model using the augmented features
+fit_lm <- lm(Honda~., data = train_augmented)
+
+P2 <- fit_lm %>%
+  augment() %>%
+  ggplot(aes(x = ndate, y = .resid)) +
+  geom_hline(yintercept = 0, color = "red") +
+  geom_point(color = palette_light()[[1]], alpha = 0.5) +
+  theme_tq() +
+  labs(title = "Training Set: lm() Model Residuals", x = "") +
+  scale_y_continuous(limits = c(-5000, 5000)) #--- grafik 2 Model Residual
+
+
+# RMSE
+sqrt(mean(fit_lm$residuals^2))
+#[1] 34209.6
+
+test_augmented <- test %>%
+  tk_augment_timeseries_signature()
+test_augmented
+
+yhat_test <- predict(fit_lm, newdata = test_augmented)
+
+pred_test <- test %>%
+  add_column(yhat = yhat_test) %>%
+  mutate(.resid = Honda - yhat)#----table 4 - test prediction
+pred_test
+
+P3 <- dmtot1 %>%
+  ggplot(aes(x = ndate, y = Honda)) +
+  geom_rect(xmin = as.numeric(ymd("2012-01-01")),
+            xmax = as.numeric(ymd("2017-01-01")),
+            ymin = 0, ymax = 1000,
+            fill = palette_light()[[4]], alpha = 0.01) +
+  annotate("text", x = ymd("2005-01-01"), y = 339,
+           color = palette_light()[[1]], label = "Train Region") +
+  annotate("text", x = ymd("2012-01-01"), y = 287,
+           color = palette_light()[[1]], label = "Test Region") +
+  geom_point(aes(x = ndate, y = Honda), data = train, alpha = 0.5, color = palette_light()[[1]]) +
+  geom_point(aes(x = ndate, y = Honda), data = pred_test, alpha = 0.5, color = palette_light()[[1]]) +
+  geom_point(aes(x = ndate, y = yhat), data = pred_test, alpha = 0.5, color = palette_light()[[2]]) +
+  theme_tq()  #----grafik 3 -train-teat region
+
+#----Test Accuracy
+# Calculating forecast error
+test_residuals <- pred_test$.resid
+pct_err <- test_residuals/pred_test$cnt*100 # Percentage error ----table 5 - error presentation
+pct_err
+
+me   <- mean(test_residuals, na.rm=TRUE)
+rmse <- mean(test_residuals^2, na.rm=TRUE)^0.5
+mae  <- mean(abs(test_residuals), na.rm=TRUE)
+mape <- mean(abs(pct_err), na.rm=TRUE)
+mpe  <- mean(pct_err, na.rm=TRUE)
+
+P4 <- ggplot(aes(x = ndate, y = .resid), data = pred_test) +
+  geom_hline(yintercept = 0, color = "red") +
+  geom_point(color = palette_light()[[1]], alpha = 0.5) +
+  geom_smooth(method = "loess") +
+  theme_tq() +
+  labs(title = "Test Set: lm() Model Residuals", x = "") +
+  scale_y_continuous(limits = c(-5000, 5000)) #-------grafik 4 test error
+
+
+error_tbl <- tibble(me, rmse, mae, mape, mpe)
+error_tbl
+#A tibble: 1 x 5
+#          me     rmse      mae  mape   mpe
+#        <dbl>    <dbl>    <dbl> <dbl> <dbl>
+# 1 -4610.039 85754.62 66431.46   NaN   NaN
+
+
+#---Forecasting
+
+# Extract Honda index
+idx <- dmtot1 %>%
+  tk_index()
+
+# ---Get time series summary from index
+honda_summary <- idx %>%
+  tk_get_timeseries_summary()
+
+idx_future <- idx %>%
+  tk_make_future_timeseries(n_future = 90)
+
+data_future <- idx_future %>%
+  tk_get_timeseries_signature() %>%
+  rename(ndate = index) #-----table 5, Future data
+data_future
+
+#---Make the prediction.
+pred_future <- predict(fit_lm, newdata = data_future)
+
+#----Build the future data frame.
+bikes_future <- data_future %>%
+  select(ndate) %>%
+  add_column(Honda = pred_future) #-----table 6 - 7 years prediction
+bikes_future
+spred <- sum(bikes_future$Honda,na.rm = TRUE)
+#[1] 48621860
+#---Prediction Total Sales Motor Honda 2005-2024
+spred1 <- stot+spred
+spred1
+#[1] 134765996
+#---Visualisasi grafik forecast 7 years future sales in Shinyapp.io
+
+P5 <- dmtot1 %>%
+  ggplot(aes(x = ndate, y = Honda)) +
+  geom_rect(xmin = as.numeric(ymd("2012-01-01")),
+            xmax = as.numeric(ymd("2017-01-01")),
+            ymin = 0, ymax = 10000,
+            fill = palette_light()[[4]], alpha = 0.01) +
+  geom_rect(xmin = as.numeric(ymd("2017-01-01")),
+            xmax = as.numeric(ymd("2017-07-01")),
+            ymin = 0, ymax = 10000,
+            fill = palette_light()[[3]], alpha = 0.01) +
+  annotate("text", x = ymd("2005-01-01"), y = 80,
+           color = palette_light()[[1]], label = "Train Region") +
+  annotate("text", x = ymd("2012-01-01"), y = 10,
+           color = palette_light()[[1]], label = "Test Region") +
+  annotate("text", x = ymd("2020-4-01"), y = 10,
+           color = palette_light()[[3]], label = "Forecast Region") +
+  geom_point(alpha = 0.5, color = palette_light()[[1]]) +
+  geom_point(aes(x = ndate, y = Honda), data = bikes_future,
+             alpha = 0.5, color = palette_light()[[2]]) +
+  geom_smooth(aes(x = ndate, y = Honda), data = bikes_future,
+              method = 'loess') +
+  labs(title = "Motorsycle sales: 7 year Forecast", x = "") + #----grafik 5 forecasting
+  theme_tq()
+
+#---Script  for Shiny vizualisation
+ui <- fluidPage(
+  tags$head(
+    tags$style(HTML("
+                    pre, table.table {
+                    font-size: smaller;
+                    }
+                    ")
+    ),
+    fluidRow(
+      column(width = 4, wellPanel(
+        radioButtons("plot_type", "7 Years Future Honda Motorcycles Sales",
+                     c("P1",
+                       "P2",
+                       "P3",
+                       "P4",
+                       "P5")
+                       #"P6")
+        )),
+        helpText(
+          (" NOTE |"),
+          (" T1 : Motorcycle sales| "),
+          (" T2 : Honda sales |"),
+          (" T3 : Train_augmented |"),
+          (" T4 : Test prediction |"),
+          (" T5 : Error presentation |"),
+          (" T6 : 7 years prediction |"),
+          (" T7 : Prediction Total Sales Honda 2005-2024 |"),
+          (" DATA: Collected from official sources |"),
+          (" Sales Honda Motorcycles between 2005-2016 |")
+         
+        ),
+        mainPanel(
+          plotOutput("plot1", width = 500, height = 350)
+        )
+      )
+    ),
+    
+  mainPanel(
+    tabsetPanel(
+      tabPanel("T1",
+               dataTableOutput("tot1")),
+      tabPanel("T2",
+               dataTableOutput("dmtot1")),
+      tabPanel("T3", 
+               dataTableOutput("train_augmented")),
+      tabPanel("T4",
+               dataTableOutput("pred_test")),
+      tabPanel("T5",
+               dataTableOutput("data_future")),
+      tabPanel("T6",
+               dataTableOutput("bikes_future")),
+       tabPanel("T7",
+               verbatimTextOutput("spred1"))
+    )
+   )
+  )
+ )
+
+server <- function(input, output) {
+  output$plot1 <- renderPlot({
+    if (input$plot_type == "P1") {
+      P1
+    }else if (input$plot_type == "P2") {
+      P2
+    }else if (input$plot_type == "P3") {
+      P3
+    }else if (input$plot_type == "P4") {
+      P4
+    }else if (input$plot_type == "P5") {
+      P5
+    }#else if (input$plot_type == "P6") {
+      #spred1
+    #}
+  })
+  output$tot1 <- renderDataTable({
+    tot1}, options = list(aLengthMenu = c(5, 30, 50), iDisplayLength = 5))
+  output$dmtot1 <- renderDataTable({
+    dmtot1}, options = list(aLengthMenu = c(5, 30, 50), iDisplayLength = 5))
+  output$train_augmented <- renderDataTable({
+    train_augmented}, options = list(aLengthMenu = c(5, 30, 50), iDisplayLength = 5))
+  output$pred_test<- renderDataTable({
+    pred_test}, options = list(aLengthMenu = c(5, 30, 50), iDisplayLength = 5))
+  output$data_future<- renderDataTable({
+    data_future}, options = list(aLengthMenu = c(5, 30, 50), iDisplayLength = 5))
+  output$bikes_future <- renderDataTable({
+    bikes_future}, options = list(aLengthMenu = c(5, 30, 50), iDisplayLength = 5))
+  output$spred1 <- renderPrint({
+    spred1})
+}
+shinyApp(ui = ui, server = server)
